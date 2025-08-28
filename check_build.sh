@@ -1,7 +1,10 @@
 #!/bin/bash
 
-rm -r build-logs
-gh run download $(gh run list --limit 1 --json databaseId --jq '.[0].databaseId')
+type=$(gum choose "remove build-logs" "use existing build-logs")
+if [ "$type" == "remove build-logs" ]; then
+    rm -r build-logs
+    gh run download $(gh run list --limit 1 --json databaseId --jq '.[0].databaseId')
+fi
 
 origin_failures=$(grep -L "Failures: 0" default-logs/build/logs/* | xargs -n1 basename | sort)
 origin_errors=$(grep -L "Errors: 0" default-logs/build/logs/* | xargs -n1 basename | sort)
